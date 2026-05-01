@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Discover Artists - EchoVerse</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#0f0f0f;
+color:white;
+margin:0;
+padding:40px;
+text-align:center;
+}
+
+h1{
+margin-bottom:40px;
+}
+
+/* ARTIST GRID */
+
+.artist-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:30px;
+max-width:1000px;
+margin:auto;
+}
+
+/* ARTIST CARD */
+
+.artist-card{
+background:#1a1a1a;
+padding:15px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.artist-card:hover{
+transform:translateY(-5px);
+}
+
+/* ARTIST IMAGE */
+
+.artist-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+transition:0.3s;
+}
+
+.artist-card img:hover{
+transform:scale(1.05);
+}
+
+/* ARTIST NAME */
+
+.artist-name{
+margin-top:10px;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Discover More Artists</h1>
+
+<div class="artist-grid">
+
+<div class="artist-card">
+<img src="images/arijit-singh.jpg" alt="arijit-singh">
+<div class="artist-name">arijit-singh</div>
+</div>
+
+<div class="artist-card">
+<img src="images/badshah.jpg" alt="Badshah">
+<div class="artist-name">Badshah</div>
+</div>
+
+<div class="artist-card">
+<img src="images/diljitdosanjh.jpg" alt="Diljit Dosanjh">
+<div class="artist-name">Diljit Dosanjh</div>
+</div>
+
+<div class="artist-card">
+<img src="images/kishore-kumar.jpg" alt="Kishore Kumar">
+<div class="artist-name">Kishore Kumar</div>
+</div>
+
+<div class="artist-card">
+<img src="images/kk.jpg" alt="KK">
+<div class="artist-name">KK</div>
+</div>
+
+<div class="artist-card">
+<img src="images/lata-mangeshkar.jpg" alt="Lata Mangeshkar">
+<div class="artist-name">Lata Mangeshkar</div>
+</div>
+
+<div class="artist-card">
+<img src="images/mohammad-rafi.jpg" alt="Mohammad Rafi">
+<div class="artist-name">Mohammad Rafi</div>
+</div>
+
+<div class="artist-card">
+<img src="images/sonu-nigam.jpg" alt="Sonu Nigam">
+<div class="artist-name">Sonu Nigam</div>
+</div>
+
+</div>
+
+</body>
+</html>

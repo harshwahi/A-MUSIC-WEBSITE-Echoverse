@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EchoVerse Player</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #131212;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.player {
+    width: 320px;
+    background: #ee6306;
+    border-radius: 20px;
+    padding: 15px;
+    position: relative;
+    transition: 0.3s ease;
+}
+
+.player::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 22px;
+    background: linear-gradient(45deg, orange, #ff6600, orange);
+    opacity: 0;
+    z-index: -1;
+    filter: blur(15px);
+    transition: 0.3s ease;
+}
+
+.player:hover::before {
+    opacity: 1;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cover-container {
+    display: flex;
+    justify-content: center;
+}
+
+.cover-container img {
+    width: 250px;
+    height: 250px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.song-info {
+    text-align: center;
+}
+
+#progress {
+    width: 100%;
+}
+
+.time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.controls button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+}
+
+.play-btn {
+    font-size: 26px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+#progress {
+    width: 100%;
+    height: 5px;
+    appearance: none;
+    background: #333;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#progress::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="player">
+
+    <div class="top-bar">
+        <button onclick="goBack()" class="back-btn">←</button>
+        <span>Now Playing</span>
+        <span>⋮</span>
+    </div>
+
+    <div class="cover-container">
+        <img id="playerCover" src="covers/default.jpg">
+    </div>
+
+    <div class="song-info">
+        <h2 id="songName">Song Name</h2>
+        <p id="artistName">Artist</p>
+    </div>
+
+     <input type="range" id="progress" value="0" min="0" max="100" step="1">
+
+    <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+    </div>
+
+    <div class="controls">
+        <button onclick="shuffleSongs()">🔀</button>
+        <button onclick="prevSong()">⏮</button>
+        <button class="play-btn" onclick="playPause()">▶</button>
+        <button onclick="nextSong()">⏭</button>
+        <button onclick="repeatSong()">🔁</button>
+    </div>
+
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+
+// 🔙 BACK BUTTON
+function goBack(){
+    window.location.href = "artists.html";
+}
+
+// 🎵 ALL SONGS 
+let songs = [
+{ name:"Aaja Piya Tohe Pyar Doon", artist:"lata", file:"songs/aaja-piya-tohe-pyar-doon.mp3", cover:"covers/aaja-piya-tohe-pyar-doon.jpg" },
+{ name:"Abhi Na Jao Chhod Kar", artist:"rafi", file:"songs/abhi-na-jaao-chhod-kar.mp3", cover:"covers/abhi-na-jao-chhod-kar.jpg" },
+{ name:"Pal Pal", artist:"arijit", file:"songs/afusic-pal-pal.mp3", cover:"covers/afusic-pal-pal.jpg" },
+{ name:"Arey Rafta Rafta", artist:"rafi", file:"songs/are-rafta-rafta-dekho-aankh-meri-ladi-hai.mp3", cover:"covers/arey-rafta-rafta-aakhn-meri-ladi-hai.jpg" },
+{ name:"Bole Chudiyan", artist:"sonu", file:"songs/bole-chudiyan.mp3", cover:"covers/bole-chudiyan.jpg" },
+{ name:"Boyfriend", artist:"badshah", file:"songs/boyfriend.mp3", cover:"covers/boyfriend.jpg" },
+{ name:"Diet Mountain Dew", artist:"other", file:"songs/diet-mountain-dew.mp3", cover:"covers/diet-mountain-dew.jpg" },
+{ name:"Dooron Dooron", artist:"other", file:"songs/dooron-dooron.mp3", cover:"covers/dooron-dooron.jpg" },
+{ name:"Ghar Kab Aaoge", artist:"arijit", file:"songs/ghar-kab-aaoge.mp3", cover:"covers/ghar-kab-aaoge.jpg" },
+{ name:"Isq Risk", artist:"sonu", file:"songs/isq-risk.mp3", cover:"covers/isq-risk.jpg" },
+{ name:"Ishqa Ve", artist:"arijit", file:"songs/ishqa-ve.mp3", cover:"covers/ishqa-ve.jpg" },
+{ name:"Itna Na Mujhse Tu Pyar Badha", artist:"lata", file:"songs/itna-na-mujhse-tu-pyar-badha.mp3", cover:"covers/itna-na-mujhse-tu-pyar-badha.jpg" },
+{ name:"Kaho Na Kaho", artist:"other", file:"songs/kaho-na-kaho.mp3", cover:"covers/kaho-na-kaho.jpg" },
+{ name:"Khayal", artist:"arijit", file:"songs/khayaal.mp3", cover:"covers/khayaal.jpg" },
+{ name:"Kya Hua Tera Wada", artist:"rafi", file:"songs/kya-hua-tera-wada.mp3", cover:"covers/kya-hua-tera-vada.jpg" },
+{ name:"Magic", artist:"other", file:"songs/magic.mp3", cover:"covers/magic.jpg" },
+{ name:"Mercy", artist:"badshah", file:"songs/mercy.mp3", cover:"covers/mercy.jpg" },
+{ name:"Moon Rise", artist:"diljit", file:"songs/moon-rise.mp3", cover:"covers/moon-rise.jpg" },
+{ name:"O Humdum", artist:"kk", file:"songs/o-humdum.mp3", cover:"covers/o-humdum.jpg" },
+{ name:"Pal Pal Dil Ke Paas", artist:"kishore", file:"songs/pal-pal-dil-ke-paas.mp3", cover:"covers/pal-pal-dil-ke-paas.jpg" },
+{ name:"Sapphire", artist:"other", file:"songs/sapphire.mp3", cover:"covers/sapphire.jpg" },
+{ name:"She Move It Like", artist:"badshah", file:"songs/she-move-it-like.mp3", cover:"covers/she-move-it-like.jpg" },
+{ name:"Soulmate", artist:"arijit", file:"songs/soulmate.mp3", cover:"covers/soulmate.jpg" },
+{ name:"Standing Next To You", artist:"other", file:"songs/standing-next-to-you.mp3", cover:"covers/standing-next-to-you.jpg" },
+{ name:"Training Season", artist:"other", file:"songs/training-season.mp3", cover:"covers/training-season.jpg" },
+{ name:"Tu Hi Meri Shab Hai", artist:"kk", file:"songs/tu-hi-meri-shab-hai.mp3", cover:"covers/tu-hi-meri-shab-hai.jpg" },
+{ name:"Tu Zaroori", artist:"arijit", file:"songs/tu-zaroori.mp3", cover:"covers/tu-zaroori.jpg" },
+{ name:"WILDFLOWER", artist:"other", file:"songs/wildflower.mp3", cover:"covers/wildflower.jpg" },
+{ name:"Yeh Dosti Hum Nai Todenge", artist:"kishore", file:"songs/yeh-dosti-hum-nahi-todenge.mp3", cover:"covers/yeh-dosti-hum-ni-todenge.jpg" }
+];
+
+// 🎯 FILTER BY ARTIST
+const params = new URLSearchParams(window.location.search);
+const selectedArtist = params.get("artist");
+
+if (selectedArtist) {
+    songs = songs.filter(song => song.artist === selectedArtist);
+}
+
+// 🎧 PLAYER VARIABLES
+let audio = document.getElementById("audio");
+let progress = document.getElementById("progress");
+
+let songName = document.getElementById("songName");
+let artistName = document.getElementById("artistName");
+let playerCover = document.getElementById("playerCover");
+
+let currentTimeEl = document.getElementById("currentTime");
+let durationEl = document.getElementById("duration");
+
+audio.addEventListener("loadedmetadata", () => {
+    progress.value = 0;
+
+    let dm = Math.floor(audio.duration / 60);
+    let ds = Math.floor(audio.duration % 60);
+    durationEl.innerText = `${dm}:${ds < 10 ? "0"+ds : ds}`;
+});
+
+let currentIndex = 0;
+let isRepeat = false;
+
+
+// 🎵 ARTIST FULL NAME MAP
+const artistMap = {
+    arijit:"Arijit Singh",
+    kk:"KK",
+    lata:"Lata Mangeshkar",
+    sonu:"Sonu Nigam",
+    badshah:"Badshah",
+    diljit:"Diljit Dosanjh",
+    rafi:"Mohammad Rafi",
+    kishore:"Kishore Kumar",
+    other:"Various Artists"
+};
+
+// ▶ PLAY SONG
+function playSong(index){
+    currentIndex = index;
+
+    audio.src = songs[index].file;
+    audio.play();
+
+    songName.innerText = songs[index].name;
+    artistName.innerText = artistMap[songs[index].artist];
+
+    playerCover.src = songs[index].cover;
+
+    document.querySelector(".play-btn").innerText = "⏸";
+}
+
+// ▶ PLAY/PAUSE
+function playPause(){
+    let btn = document.querySelector(".play-btn");
+
+    if(audio.paused){
+        audio.play();
+        btn.innerText = "⏸";
+    } else {
+        audio.pause();
+        btn.innerText = "▶";
+    }
+}
+
+// ⏭ NEXT
+function nextSong(){
+    currentIndex = (currentIndex + 1) % songs.length;
+    playSong(currentIndex);
+}
+
+// ⏮ PREV
+function prevSong(){
+    currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+    playSong(currentIndex);
+}
+
+// 🔀 SHUFFLE
+function shuffleSongs(){
+    currentIndex = Math.floor(Math.random() * songs.length);
+    playSong(currentIndex);
+}
+
+// 🔁 REPEAT
+function repeatSong(){
+    isRepeat = !isRepeat;
+    alert("Repeat " + (isRepeat ? "ON 🔁" : "OFF"));
+}
+
+// AUTO NEXT
+audio.addEventListener("ended", () => {
+    if(isRepeat) playSong(currentIndex);
+    else nextSong();
+});
+
+// PROGRESS
+audio.addEventListener("timeupdate", () => {
+    if(audio.duration){
+        progress.value = (audio.currentTime / audio.duration) * 100;
+
+        let m = Math.floor(audio.currentTime / 60);
+        let s = Math.floor(audio.currentTime % 60);
+        currentTimeEl.innerText = `${m}:${s < 10 ? "0"+s : s}`;
+
+        let dm = Math.floor(audio.duration / 60);
+        let ds = Math.floor(audio.duration % 60);
+        durationEl.innerText = `${dm}:${ds < 10 ? "0"+ds : ds}`;
+    }
+});
+
+// SEEK
+progress.addEventListener("input", () => {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+});
+
+// ERROR
+audio.addEventListener("error", () => {
+    alert("❌ Song not found or file name incorrect");
+});
+
+// ▶ AUTO START
+if (songs.length > 0) {
+    playSong(0);
+}
+
+</script>
+
+</body>
+</html>

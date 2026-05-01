@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoVerse - Songs</title>
+
+<style>
+
+/* GLOBAL */
+body{
+    margin:0;
+    background:black;
+    color:white;
+    font-family:Arial;
+}
+
+/* NAVBAR */
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 20px;
+    background:#0a0a0a;
+    box-shadow:0 0 10px orange;
+    z-index:1000;
+}
+.logo{
+    color:orange;
+    font-weight:bold;
+}
+.nav-links a{
+    margin:0 10px;
+    text-decoration:none;
+    color:white;
+}
+.nav-links a:hover{
+    color:orange;
+}
+
+.logout-btn{
+    background:orange;
+    border:none;
+    padding:6px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+/* GRID */
+section{
+    margin-top:80px;
+    padding:15px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:15px;
+}
+.song-card{
+    background:#111;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+.song-card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px orange;
+}
+.song-card img{
+    width:100%;
+    height:120px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+/* MINI PLAYER */
+.mini-player{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#111;
+    display:flex;
+    align-items:center;
+    padding:10px;
+    box-shadow:0 0 10px orange;
+    cursor:pointer;
+    z-index:1500;
+}
+.mini-player img{
+    width:40px;
+    height:40px;
+    margin-right:10px;
+}
+
+/* FULL PLAYER */
+.player{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:black;
+    transform:translateY(100%);
+    transition:0.4s;
+    z-index:2000;
+}
+.player.active{
+    transform:translateY(0);
+}
+
+/* BACKGROUND */
+.player-bg{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-size:cover;
+    background-position:center;
+    filter:blur(30px) brightness(0.5);
+    z-index:0;
+}
+
+/* COVER */
+.player-cover{
+    width:260px;
+    height:260px;
+    border-radius:15px;
+    z-index:2;
+}
+
+/* SONG INFO */
+.song-info{
+    text-align:center;
+    margin-top:15px;
+    z-index:2;
+}
+.song-info p{
+    color:orange;
+}
+
+/* CONTROLS */
+.controls{
+    margin-top:20px;
+    z-index:2;
+}
+.controls button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:22px;
+    margin:10px;
+    cursor:pointer;
+}
+.play-btn{
+    background:orange;
+    color:black;
+    border-radius:50%;
+    width:60px;
+    height:60px;
+}
+.play-btn:hover{
+    box-shadow:0 0 15px orange;
+}
+
+/* PROGRESS BAR */
+.progress-container{
+    width:80%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:15px;
+    z-index:2;
+}
+#progressBar{
+    flex:1;
+    appearance:none;
+    height:5px;
+    background:#333;
+    border-radius:5px;
+}
+#progressBar::-webkit-slider-thumb{
+    appearance:none;
+    width:12px;
+    height:12px;
+    background:orange;
+    border-radius:50%;
+}
+
+.navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 20px;
+    background:#0a0a0a;
+    box-shadow:0 0 10px orange;
+    z-index:1000;
+}
+
+.nav-left .logo{
+    color:orange;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.nav-center{
+    display:flex;
+    gap:20px;
+}
+
+.nav-center a{
+    text-decoration:none;
+    color:white;
+    transition:0.3s;
+}
+
+.nav-center a:hover{
+    color:orange;
+}
+
+.nav-right .logout-btn{
+    background:orange;
+    border:none;
+    padding:6px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+<nav class="navbar">
+
+    <div class="nav-left">
+        <div class="logo">EchoVerse</div>
+    </div>
+
+    
+    <div class="nav-links"> 
+    <a href="index.html">Home</a> 
+    <a href="songs.html">Songs</a>
+     <a href="artists.html">Artists</a> 
+     <a href="albums.html">Albums</a> 
+    </div>
+
+    <div class="nav-right">
+        <button class="logout-btn">Logout</button>
+    </div>
+
+</nav>
+
+<section>
+    <h2>All Songs</h2>
+    <div id="songContainer" class="grid"></div>
+</section>
+
+<div class="mini-player" onclick="openPlayer()">
+    <img id="miniCover">
+    <span id="miniName">Select a song</span>
+</div>
+
+<div class="player" id="player">
+    <div class="player-bg" id="playerBg"></div>
+
+    <img id="playerCover" class="player-cover">
+
+    <div class="song-info">
+        <h2 id="songName">Song</h2>
+        <p>EchoVerse</p>
+    </div>
+
+    <div class="controls">
+        <button onclick="prevSong()">⏮</button>
+        <button class="play-btn" onclick="playPause()">▶</button>
+        <button onclick="nextSong()">⏭</button>
+    </div>
+
+    <div class="progress-container">
+        <span id="currentTime">0:00</span>
+        <input type="range" id="progressBar" min="0" max="100" value="0">
+        <span id="duration">0:00</span>
+    </div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+
+// SONG DATA
+let songs = [
+{ name: "Aaja Piya Tohe Pyar Doon", file: "songs/aaja-piya-tohe-pyar-doon.mp3", cover: "covers/aaja-piya-tohe-pyar-doon.jpg" },
+{ name: "Abhi Na Jao Chhod Kar", file: "songs/abhi-na-jaao-chhod-kar.mp3", cover: "covers/abhi-na-jao-chhod-kar.jpg" },
+{ name: "Pal Pal", file: "songs/afusic-pal-pal.mp3", cover: "covers/afusic-pal-pal.jpg" },
+{ name: "Arey Rafta Rafta Dekho Aankh Meri Ladi Hai", file: "songs/are-rafta-rafta-dekho-aankh-meri-ladi-hai.mp3", cover: "covers/arey-rafta-rafta-aakhn-meri-ladi-hai.jpg" },
+{ name: "Bole Chudiyan", file: "songs/bole-chudiyan.mp3", cover: "covers/bole-chudiyan.jpg" },
+{ name: "Boyfriend", file: "songs/boyfriend.mp3", cover: "covers/boyfriend.jpg" },
+{ name: "Diet Mountain Dew", file: "songs/diet-mountain-dew.mp3", cover: "covers/diet-mountain-dew.jpg" },
+{ name: "Dooron Dooron", file: "songs/dooron-dooron.mp3", cover: "covers/dooron-dooron.jpg" },
+{ name: "Ghar Kab Aaoge", file: "songs/ghar-kab-aaoge.mp3", cover: "covers/ghar-kab-aaoge.jpg" },
+{ name: "Isq Risk", file: "songs/isq-risk.mp3", cover: "covers/isq-risk.jpg" },
+{ name: "Ishqa Ve", file: "songs/ishqa-ve.mp3", cover: "covers/ishqa-ve.jpg" },
+{ name: "Itna Na Mujhse Tu Pyar Badha", file: "songs/itna-na-mujhse-tu-pyar-badha.mp3", cover: "covers/itna-na-mujhse-tu-pyar-badha.jpg" },
+{ name: "Kaho Na Kaho", file: "songs/kaho-na-kaho.mp3", cover: "covers/kaho-na-kaho.jpg" },
+{ name: "Khayal", file: "songs/khayaal.mp3", cover: "covers/khayaal.jpg" },
+{ name: "Kya Hua Tera Wada", file: "songs/kya-hua-tera-wada.mp3", cover: "covers/kya-hua-tera-vada.jpg" },
+{ name: "Magic", file: "songs/magic.mp3", cover: "covers/magic.jpg" },
+{ name: "Mercy", file: "songs/mercy.mp3", cover: "covers/mercy.jpg" },
+{ name: "Moon Rise", file: "songs/moon-rise.mp3", cover: "covers/moon-rise.jpg" },
+{ name: "O Humdum", file: "songs/o-humdum.mp3", cover: "covers/o-humdum.jpg" },
+{ name: "Pal Pal Dil Ke Paas", file: "songs/pal-pal-dil-ke-paas.mp3", cover: "covers/pal-pal-dil-ke-paas.jpg" },
+{ name: "Sapphire", file: "songs/sapphire.mp3", cover: "covers/sapphire.jpg" },
+{ name: "She Move It Like", file: "songs/she-move-it-like.mp3", cover: "covers/she-move-it-like.jpg" },
+{ name: "Soulmate", file: "songs/soulmate.mp3", cover: "covers/soulmate.jpg" },
+{ name: "Standing Next To You", file: "songs/standing-next-to-you.mp3", cover: "covers/standing-next-to-you.jpg" },
+{ name: "Training Season", file: "songs/training-season.mp3", cover: "covers/training-season.jpg" },
+{ name: "Tu Hi Meri Shab Hai", file: "songs/tu-hi-meri-shab-hai.mp3", cover: "covers/tu-hi-meri-shab-hai.jpg" },
+{ name: "Tu Zaroori", file: "songs/tu-zaroori.mp3", cover: "covers/tu-zaroori.jpg" },
+{ name: "WILDFLOWER", file: "songs/wildflower.mp3", cover: "covers/wildflower.jpg" },
+{ name: "Yeh Dosti Hum Nai Todenge", file: "songs/yeh-dosti-hum-nahi-todenge.mp3", cover: "covers/yeh-dosti-hum-ni-todenge.jpg" }
+];
+
+// LOAD SONGS
+let container = document.getElementById("songContainer");
+
+songs.forEach((song,index)=>{
+    let card=document.createElement("div");
+    card.className="song-card";
+    card.innerHTML=`<img src="${song.cover}"><h3>${song.name}</h3>`;
+    card.onclick=()=>playSong(index);
+    container.appendChild(card);
+});
+
+// PLAYER VARIABLES
+let audio = document.getElementById("audio");
+let progressBar = document.getElementById("progressBar");
+let currentTimeEl = document.getElementById("currentTime");
+let durationEl = document.getElementById("duration");
+
+let player = document.getElementById("player");
+let playerCover = document.getElementById("playerCover");
+let playerBg = document.getElementById("playerBg");
+let songName = document.getElementById("songName");
+let miniCover = document.getElementById("miniCover");
+let miniName = document.getElementById("miniName");
+
+let currentIndex = 0;
+
+// PLAY SONG
+function playSong(index){
+    currentIndex=index;
+
+    audio.src=songs[index].file;
+    audio.load();
+    audio.play();
+
+    songName.innerText=songs[index].name;
+    playerCover.src=songs[index].cover;
+    playerBg.style.backgroundImage=`url(${songs[index].cover})`;
+
+    miniCover.src=songs[index].cover;
+    miniName.innerText=songs[index].name;
+
+    document.querySelector(".play-btn").innerText="⏸";
+
+    player.classList.add("active");
+}
+
+// PLAY / PAUSE
+function playPause(){
+    let btn=document.querySelector(".play-btn");
+
+    if(audio.paused){
+        audio.play();
+        btn.innerText="⏸";
+    } else{
+        audio.pause();
+        btn.innerText="▶";
+    }
+}
+
+// NEXT / PREV
+function nextSong(){
+    currentIndex=(currentIndex+1)%songs.length;
+    playSong(currentIndex);
+}
+function prevSong(){
+    currentIndex=(currentIndex-1+songs.length)%songs.length;
+    playSong(currentIndex);
+}
+
+// OPEN PLAYER
+function openPlayer(){
+    player.classList.add("active");
+}
+
+// PROGRESS UPDATE
+audio.addEventListener("timeupdate", ()=>{
+    if(audio.duration){
+        progressBar.value=(audio.currentTime/audio.duration)*100;
+
+        let m=Math.floor(audio.currentTime/60);
+        let s=Math.floor(audio.currentTime%60);
+        currentTimeEl.innerText=`${m}:${s<10?"0"+s:s}`;
+    }
+});
+
+// LOAD DURATION
+audio.addEventListener("loadedmetadata", ()=>{
+    let m=Math.floor(audio.duration/60);
+    let s=Math.floor(audio.duration%60);
+    durationEl.innerText=`${m}:${s<10?"0"+s:s}`;
+});
+
+// SEEK
+progressBar.addEventListener("input", ()=>{
+    audio.currentTime=(progressBar.value/100)*audio.duration;
+});
+
+</script>
+
+</body>
+</html>

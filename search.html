@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoVerse - Search</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    margin: 0;
+    padding-top: 80px;
+    background: linear-gradient(to bottom, #000, #111, #000);
+    color: white;
+}
+
+/* 🔥 SEARCH SECTION CENTER */
+.search-section{
+    text-align: center;
+}
+
+.search-box{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.search-box input{
+    width: 350px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: #111;
+    color: white;
+    font-size: 15px;
+    box-shadow: 0 0 10px rgba(255,165,0,0.4);
+    transition: 0.3s;
+}
+
+.search-box input:focus{
+    box-shadow: 0 0 15px orange;
+}
+
+.search-box button{
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    background: orange;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-box button:hover{
+    box-shadow: 0 0 15px orange;
+}
+
+/* 🔥 FIX RESULTS CENTRE */
+
+.songs-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    padding: 30px;
+    width: 90%;
+    margin: auto;
+}
+
+.song-card{
+    background: #181818;
+    border-radius: 15px;
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+}
+.cover{
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.song-card:hover{
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 0 20px orange;
+}
+
+/* PLAYER ALIGNMENT */
+.music-player{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.music-player button{
+    background: #222;
+    border: none;
+    padding: 8px 12px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.music-player button:hover{
+    background: orange;
+    color: black;
+}
+
+/* 🎯 BUTTON ROW CENTER */
+.music-player div{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 8px 0;
+}
+
+/* 🎯 PROGRESS BAR CENTER + WIDTH */
+#progress{
+    width: 80%;
+    margin: auto;
+    display: block;
+}
+.player{
+    pointer-events:none;
+}
+.player.active{
+    pointer-events:auto;
+}
+@media(max-width:768px){
+    .search-box input{
+        width: 200px;
+    }
+
+    .songs-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav>
+    <div>
+        <div class="logo">EchoVerse</div>
+        <div class="tagline">Feel the Beat</div>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="songs.html">Songs</a>
+        <a href="artists.html">Artists</a>
+        <a href="albums.html">Albums</a>
+        <a href="search.html">Search</a>
+    </div>
+
+    <a href="login.html" class="sign-btn">Login</a>
+</nav>
+
+<!-- 🔍 SEARCH -->
+<section class="search-section">
+    <h2>Search Songs</h2>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search any song...">
+        <button onclick="searchSongs()">Search</button>
+    </div>
+</section>
+
+<!-- 🎵 RESULTS -->
+<div id="results" class="songs-grid"></div>
+
+<!-- 🎧 PLAYER -->
+<div class="music-player">
+    <span id="songName">Select a song</span>
+
+    <div>
+        <button onclick="prevSong()">⏮</button>
+        <button onclick="playPause()">▶</button>
+        <button onclick="nextSong()">⏭</button>
+    </div>
+
+    <input type="range" id="progress" value="0">
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+
+// SONG LIST
+let songs = [
+{ name: "Aaja Piya Tohe Pyar Doon", file: "songs/aaja-piya-tohe-pyar-doon.mp3", cover: "covers/aaja-piya-tohe-pyar-doon.jpg" },
+{ name: "Abhi Na Jao Chhod Kar", file: "songs/abhi-na-jaao-chhod-kar.mp3", cover: "covers/abhi-na-jao-chhod-kar.jpg" },
+{ name: "Pal Pal", file: "songs/afusic-pal-pal.mp3", cover: "covers/afusic-pal-pal.jpg" },
+{ name: "Arey Rafta Rafta Dekho Aankh Meri Ladi Hai", file: "songs/are-rafta-rafta-aakhn-meri-ladi-hai.mp3", cover: "covers/arey-rafta-rafta-aakhn-meri-ladi-hai.jpg" },
+{ name: "Bole Chudiyan", file: "songs/bole-chudiyan.mp3", cover: "covers/bole-chudiyan.jpg" },
+{ name: "Boyfriend", file: "songs/boyfriend.mp3", cover: "covers/boyfriend.jpg" },
+{ name: "Diet Mountain Dew", file: "songs/diet-mountain-dew.mp3", cover: "covers/diet-mountain-dew.jpg" },
+{ name: "Dooron Dooron", file: "songs/dooron-dooron.mp3", cover: "covers/dooron-dooron.jpg" },
+{ name: "Ghar Kab Aaoge", file: "songs/ghar-kab-aaoge.mp3", cover: "covers/ghar-kab-aaoge.jpg" },
+{ name: "Isq Risk", file: "songs/isq-risk.mp3", cover: "covers/isq-risk.jpg" },
+{ name: "Ishqa Ve", file: "songs/ishqa-ve.mp3", cover: "covers/ishqa-ve.jpg" },
+{ name: "Itna Na Mujhse Tu Pyar Badha", file: "songs/itna-na-mujhse-tu-pyar-badha.mp3", cover: "covers/itna-na-mujhse-tu-pyar-badha.jpg" },
+{ name: "Kaho Na Kaho", file: "songs/kaho-na-kaho.mp3", cover: "covers/kaho-na-kaho.jpg" },
+{ name: "Khayal", file: "songs/khayaal.mp3", cover: "covers/khayaal.jpg" },
+{ name: "Kya Hua Tera Wada", file: "songs/kya-hua-tera-vada.mp3", cover: "covers/kya-hua-tera-vada.jpg" },
+{ name: "Magic", file: "songs/magic.mp3", cover: "covers/magic.jpg" },
+{ name: "Mercy", file: "songs/mercy.mp3", cover: "covers/mercy.jpg" },
+{ name: "Moon Rise", file: "songs/moon-rise.mp3", cover: "covers/moon-rise.jpg" },
+{ name: "O Humdum", file: "songs/o-humdum.mp3", cover: "covers/o-humdum.jpg" },
+{ name: "Pal Pal Dil Ke Paas", file: "songs/pal-pal-dil-ke-paas.mp3", cover: "covers/pal-pal-dil-ke-paas.jpg" },
+{ name: "Sapphire", file: "songs/sapphire.mp3", cover: "covers/sapphire.jpg" },
+{ name: "She Move It Like", file: "songs/she-move-it-like.mp3", cover: "covers/she-move-it-like.jpg" },
+{ name: "Soulmate", file: "songs/soulmate.mp3", cover: "covers/soulmate.jpg" },
+{ name: "Standing Next To You", file: "songs/standing-next-to-you.mp3", cover: "covers/standing-next-to-you.jpg" },
+{ name: "Training Season", file: "songs/training-season.mp3", cover: "covers/training-season.jpg" },
+{ name: "Tu Hi Meri Shab Hai", file: "songs/tu-hi-meri-shab-hai.mp3", cover: "covers/tu-hi-meri-shab-hai.jpg" },
+{ name: "Tu Zaroori", file: "songs/tu-zaroori.mp3", cover: "covers/tu-zaroori.jpg" },
+{ name: "WILDFLOWER", file: "songs/wildflower.mp3", cover: "covers/wildflower.jpg" },
+{ name: "Yeh Dosti Hum Nai Todenge", file: "songs/yeh-dosti-hum-nahi-todenge.mp3", cover: "covers/yeh-dosti-hum-ni-todenge.jpg" }
+];
+
+//  SEARCH
+function searchSongs(){
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let results = document.getElementById("results");
+    results.innerHTML = "";
+
+    let filtered = songs.filter(song => song.name.toLowerCase().includes(input));
+
+    if(filtered.length === 0){
+        results.innerHTML = "<p style='text-align:center;'>No songs found</p>";
+        return;
+    }
+
+    filtered.forEach((song)=>{
+        let index = songs.indexOf(song);
+
+        let card = document.createElement("div");
+        card.classList.add("song-card");
+        card.innerHTML = `
+    <img src="${song.cover}" class="cover">
+    <h4>${song.name}</h4>
+`;
+        card.onclick = () => playSong(index);
+
+        results.appendChild(card);
+    });
+}
+
+// 🎧 PLAYER
+let audio = document.getElementById("audio");
+let songName = document.getElementById("songName");
+let progress = document.getElementById("progress");
+let currentIndex = 0;
+
+function playSong(index){
+    currentIndex = index;
+    audio.src = songs[index].file;
+    audio.play();
+    songName.innerText = songs[index].name;
+}
+
+function playPause(){
+    if(audio.paused) audio.play();
+    else audio.pause();
+}
+
+function nextSong(){
+    currentIndex = (currentIndex + 1) % songs.length;
+    playSong(currentIndex);
+}
+
+function prevSong(){
+    currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+    playSong(currentIndex);
+}
+
+audio.addEventListener("timeupdate", ()=>{
+    if(audio.duration){
+        progress.value = (audio.currentTime / audio.duration) * 100;
+    }
+});
+
+progress.addEventListener("input", ()=>{
+    if(audio.duration){
+        audio.currentTime = (progress.value / 100) * audio.duration;
+    }
+});
+
+</script>
+
+</body>
+</html>

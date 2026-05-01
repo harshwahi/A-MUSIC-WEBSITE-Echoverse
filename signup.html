@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EchoVerse - Sign Up</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav>
+    <div>
+        <div class="logo">EchoVerse</div>
+    </div>
+</nav>
+
+<!-- 🔐 SIGNUP FORM -->
+<div class="signup-container">
+
+    <h1>Create Account</h1>
+    <p>Join EchoVerse today</p>
+
+    <form onsubmit="signupUser(event)">
+
+        <div class="input-box">
+            <label>Email</label>
+            <input type="email" id="email" required>
+        </div>
+
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" id="password" required>
+        </div>
+
+        <button class="signup-btn">Sign Up</button>
+
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="login.html">Login</a>
+    </div>
+
+</div>
+
+<!-- 🔧 SCRIPT -->
+<script>
+
+function signupUser(e){
+    e.preventDefault();
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    let user = {
+        email: email,
+        password: password
+    };
+
+    // Save user data
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // 🔥 Login user immediately (IMPORTANT)
+    localStorage.setItem("userEmail", email);
+
+    alert("Signup Successful 🎉");
+
+    // 🔥 Redirect to profile
+    window.location.href = "profile.html";
+}
+
+</script>
+
+</body>
+</html>

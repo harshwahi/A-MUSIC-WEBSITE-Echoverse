@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoVerse Profile</title>
+
+<style>
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+body {
+  background: #2b2b2b;
+  color: #fff;
+}
+
+/* Avatar */
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6f00, #e65c00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 20px #ff6f00, 0 0 30px #cc5200 inset;
+  transition: 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+}
+
+/* Header */
+.profile-header {
+  height: 300px;
+  background: linear-gradient(135deg, #ff6f00, #e65c00);
+  display: flex;
+  align-items: flex-end;
+  padding: 30px;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.profile-img {
+  margin-right: 25px;
+}
+
+.profile-info h1 {
+  font-size: 2.5rem;
+}
+
+.profile-info p {
+  opacity: 0.8;
+  margin: 5px 0;
+}
+
+.stats {
+  display: flex;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+.stats span {
+  color: #ffb84d;
+  font-weight: bold;
+}
+
+/* Songs */
+.recent-songs {
+  padding: 30px;
+}
+
+.recent-songs h2 {
+  margin-bottom: 20px;
+  color: #ffb84d;
+}
+
+.song-card {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  margin: 10px;
+  background: #2b2b2b;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff6f00;
+  text-align: center;
+  padding-top: 110px;
+  font-size: 0.9rem;
+}
+
+/* Dummy users */
+.users-list {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- PROFILE HEADER -->
+<div class="profile-header">
+
+  <div class="profile-img">
+    <div class="avatar" id="profileAvatar">G</div>
+  </div>
+
+  <div class="profile-info">
+    <h1 id="username">Guest</h1>
+    <p>Welcome to EchoVerse</p>
+
+    <div class="stats">
+      <div><span>0</span> Playlists</div>
+      <div><span>0</span> Songs</div>
+      <div><span>0</span> Followers</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RECENT SONGS -->
+<div class="recent-songs">
+  <h2>Recently Played</h2>
+
+  <div class="song-card">Song 1</div>
+  <div class="song-card">Song 2</div>
+  <div class="song-card">Song 3</div>
+  <div class="song-card">Song 4</div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+let email = localStorage.getItem("userEmail");
+
+// If not logged in → go back
+if(!email){
+    window.location.href = "login.html";
+}
+
+// Get username
+let username = email.split("@")[0];
+
+// Show username
+document.getElementById("username").innerText = username;
+
+// Show avatar letter
+document.getElementById("profileAvatar").innerText =
+    username.charAt(0).toUpperCase();
+</script>
+
+</body>
+</html>

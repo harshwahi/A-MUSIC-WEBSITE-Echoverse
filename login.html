@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoVerse - Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav>
+    <div>
+        <div class="logo">EchoVerse</div>
+        <div class="tagline">Feel the Beat</div>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="songs.html">Songs</a>
+        <a href="artists.html">Artists</a>
+        <a href="albums.html">Albums</a>
+        <a href="search.html">Search</a>
+    </div>
+
+    <a href="signup.html" class="sign-btn">Sign Up</a>
+</nav>
+
+<!-- 🔐 LOGIN FORM -->
+<div class="signup-container">
+
+    <h1>Welcome Back</h1>
+    <p>Login to continue your music journey</p>
+
+    <form onsubmit="loginUser(event)">
+
+        <div class="input-box">
+            <label>Email</label>
+            <input type="email" id="email" required>
+        </div>
+
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" id="password" required>
+        </div>
+
+        <button class="signup-btn">Login</button>
+
+    </form>
+
+    <div class="login-link">
+        Don't have an account? <a href="signup.html">Sign Up</a>
+    </div>
+
+</div>
+
+<script>
+function loginUser(event){
+    event.preventDefault();
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    let storedUser = JSON.parse(localStorage.getItem("user"));
+
+    // DEBUG (optional)
+    console.log(storedUser);
+
+    if(!storedUser){
+        alert("No account found! Please sign up first ❌");
+        return;
+    }
+
+    if(email === storedUser.email && password === storedUser.password){
+
+        alert("Login Successful 🎉");
+
+        localStorage.setItem("userEmail", email);
+
+        window.location.href = "profile.html";
+
+    } else {
+        alert("Invalid Credentials ❌");
+    }
+}
+</script>
+
+</body>
+</html>

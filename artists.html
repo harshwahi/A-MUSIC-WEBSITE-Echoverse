@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoVerse - Artists</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    margin-top:80px;
+}
+.artist-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 per row */
+    gap: 20px;
+    padding: 20px;
+}
+.artist {
+    background: #111;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.artist-card img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: top;   
+    border-radius: 10px;
+}
+
+.artist:hover {
+    transform: scale(1.05);
+}
+@media(max-width:900px){
+    .artist-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:500px){
+    .artist-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.artist {
+    cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav>
+    <div>
+        <div class="logo">EchoVerse</div>
+        <div class="tagline">Feel the echo live the verse</div>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="songs.html">Songs</a>
+        <a href="artists.html">Artists</a>
+        <a href="albums.html">Albums</a>
+        <a href="search.html">Search</a>
+    </div>
+
+    <a href="login.html" class="sign-btn">Login</a>
+</nav>
+
+<!--TITLE -->
+<section>
+    <h2 class="section-title">Featured Artists</h2>
+
+
+    <div class="artist-grid">
+
+
+    <div class="artist" onclick="openArtist('arijit')">
+        <img src="images/arijit-singh.jpg">
+        <h3>Arijit Singh</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('kk')">
+        <img src="images/kk.jpg">
+        <h3>KK</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('lata')">
+        <img src="images/lata-mangeshkar.jpg">
+        <h3>Lata Mangeshkar</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('sonu')">
+        <img src="images/sonu-nigam.jpg">
+        <h3>Sonu Nigam</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('badshah')">
+        <img src="images/badshah.jpg">
+        <h3>Badshah</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('diljit')">
+        <img src="images/diljitdosanjh.jpg">
+        <h3>Diljit Dosanjh</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('rafi')">
+        <img src="images/mohammad-rafi.jpg">
+        <h3>Mohammad Rafi</h3>
+    </div>
+
+    <div class="artist" onclick="openArtist('kishore')">
+        <img src="images/kishore-kumar.jpg">
+        <h3>Kishore Kumar</h3>
+    </div>
+
+</div>
+
+</section>
+
+<script>
+function openArtist(name) {
+    window.location.href = "player.html?artist=" + name;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EchoVerse - Feel The Echo</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+html{
+    scroll-behavior:smooth;
+}
+.card h4{
+    margin-top: 10px;
+    color: white;
+    font-size: 14px;
+}
+
+.card{
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 20px orange;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+  <div class="logo-box">
+    <div class="logo">EchoVerse</div>
+    <div class="tagline">Feel The Echo Live The Verse</div>
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="songs.html">Songs</a>
+    <a href="search.html">Search</a>
+    <a href="#trending">Trending</a>
+    <a href="#artists">Artists</a>
+    <a href="#albums">Albums</a>
+  </div>
+
+  <div class="auth-buttons">
+    <a href="login.html" class="sign-btn">Login</a>
+    <a href="signup.html" class="sign-btn">Sign Up</a>
+  </div>
+
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+<div class="hero-text">
+<h1>Experience Music <br> Like Never Before</h1>
+<p>Stream trending hits, discover new artists, and feel every beat in EchoVerse.</p>
+
+<div class="hero-buttons">
+<button class="btn-primary">explore below</button>
+<button class="btn-secondary" onclick="window.location.href='songs.html';">
+    listen now
+</button>
+</div>
+</div>
+
+<div class="hero-img">
+<img src="echoverse-logo.png">
+</div>
+
+</section>
+
+<!-- TRENDING -->
+<section id="trending">
+
+<h2 class="section-title">Trending Songs</h2>
+
+<div class="grid">
+
+<div class="card" onclick="openSong(0)">
+<img src="covers/khayaal.jpg">
+<div class="overlay"><span>▶</span></div>
+</div>
+
+<div class="card" onclick="openSong(1)">
+<img src="covers/magic.jpg">
+<div class="overlay"><span>▶</span></div>
+</div>
+
+<div class="card" onclick="openSong(2)">
+<img src="covers/mercy.jpg">
+<div class="overlay"><span>▶</span></div>
+</div>
+
+</div>
+
+</section>
+
+<!-- ARTISTS -->
+<section id="artists" class="featured-artists">
+
+<h2 class="section-title">Featured Artists</h2>
+
+<div class="artist-row">
+
+<div class="artist">
+<img src="images/arijit-singh.jpg">
+<h3>Arijit Singh</h3>
+</div>
+
+<div class="artist">
+<img src="images/badshah.jpg">
+<h3>Badshah</h3>
+</div>
+
+<div class="artist">
+<img src="images/sonu-nigam.jpg">
+<h3>Sonu Nigam</h3>
+</div>
+
+<div class="artist-arrow">
+<a href="artists.html">→</a> 
+</div>
+
+</div>
+
+</section>
+
+<!-- ALBUMS -->
+<section id="albums">
+
+<h2 class="section-title">Latest Albums</h2>
+
+<div class="grid">
+<div class="card" onclick="window.location.href='album-talwinder.html'">
+    <img src="album cover/album cover 1.webp">
+    <h4>feel the Talwinder</h4>
+</div>
+
+<div class="card" onclick="window.location.href='album-kk.html'">
+    <img src="album cover/album cover 2.jpg">
+    <h4>KK Best Songs</h4>
+</div>
+
+<div class="card" onclick="window.location.href='album-lata.html'">
+    <img src="album cover/album cover 3.jpg">
+    <h4>Lata Mangeshkar</h4>
+</div>
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+<h2>Join EchoVerse Today</h2>
+
+<p>Feel the echo. Live the verse.</p>
+
+
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 EchoVerse. All Rights Reserved.</p>
+</footer>
+
+<!-- SCRIPT -->
+<script>
+
+function openSong(index){
+    window.location.href = "songs.html?song=" + index;
+}
+</script>
+<!-- Auth Modal -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-box">
+    <h2>Welcome to EchoVerse</h2>
+    <p>Please Login or Signup to continue</p>
+
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+
+    <div class="auth-buttons">
+      <button onclick="goLogin()">Login</button>
+      <button onclick="goSignup()">Signup</button> 
+    </div>
+  </div>
+</div>
+
+<script>
+
+setTimeout(() => {
+    if (!localStorage.getItem("loggedIn")) {
+        document.getElementById("authModal").style.display = "flex";
+    }
+}, 30000);
+
+// Redirect functions
+function goLogin() {
+    window.location.href = "login.html";
+    localStorage.setItem("loggedIn", "true");
+}
+
+function goSignup() {
+    window.location.href = "signup.html";
+    localStorage.setItem("loggedIn", "true");
+}
+</script>
+</body>
+</html>
